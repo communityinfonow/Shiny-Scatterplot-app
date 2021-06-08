@@ -1,15 +1,13 @@
-#load("H:/R Fun/COVIDscatter_zip/thc.Rdata") REAL APP
 load('thc.Rdata')
 
-#thc$f_unemp_rate<-as.numeric(thc$f_unemp_rate)
 
 library(shiny)
-#library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(plotly)
 library(shinythemes)
 
+# Creating vectors to call on in plotly. This allows the axis labels to update as the user changes to their choices.
 choiceVecx <- c("Cases / 10k" = "case_rate",
                 "Hospitalizations / 10k" = "hosp_rate",
                 "Deaths / 100k" = "mort_rate",
@@ -109,25 +107,21 @@ choiceVecy <- c("American Indian or Alaska Native %" = "popAmIndian_percent",
                 "No Vehicles Available in Household, Householder 65 and up %" = "nocar65up_percent",
                 "Computer and Broadband in Household %" = "broadbandComp_percent")
 
+# page set up
 ui <- fluidPage(
   theme = shinytheme("yeti"),
+  tags$br(), #add line break
+  tags$h3("COVID-19 ZIP Code Correlations", align = "center"), #Centering title
   tags$br(),
-  #tags$img(src = "CI Now+UTH.png", height = 109,width = 850),
-  #tags$p(),
-  tags$h3("COVID-19 ZIP Code Correlations", align = "center"),
-  tags$br(),
-  #tags$p("paragraph text here"),
-  
-  # Application title
-  #titlePanel("Test Data: Trends"),
   
   # Sidebar with 3 select inputs for filtering and plotting
   sidebarLayout(
     sidebarPanel(
       p("Choose two variables to explore relationships"),
+      p(), # p() can also work as lines breaks
       p(),
       p(),
-      p(),
+      # selectizeInput is the dropdown object used with the plotly function, 'xCol' and 'yCol' are the dropdown menu objects, you can create vectors to group your choices
       selectizeInput('xCol', 'Choose a COVID-19 or Vaccine Indicator*', 
                      choices = list(
                        COVID = c("Cases / 10k" = "case_rate",
@@ -239,10 +233,10 @@ ui <- fluidPage(
     ),
     
     # Shows the plot
-    mainPanel(textOutput("info1"),
-              textOutput("info2"),
+    mainPanel(textOutput("info1"), #this will display the correlation coefficient
+              textOutput("info2"), #this will display the direction of the relationship
               p(),
-              plotlyOutput('plot'),
+              plotlyOutput('plot'), #shows the plot
               p(),
               h6("*COVID case and death data current as of May 11, 2021. Vaccine data current as of May 3, 2021. COVID hospitalization data current as of November 15, 2020."),
               strong("Sources:"),
